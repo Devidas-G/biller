@@ -130,8 +130,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
                             .add(DeleteCategoryEvent(categoryEntity: category));
                       },
                       onEdit: (CategoryEntity category) {
-                        categoryBloc
-                            .add(EditCategoryEvent(categoryEntity: category));
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return EditCategory(
+                                category: category,
+                                onSave: (CategoryEntity newCategory) {
+                                  categoryBloc.add(EditCategoryEvent(
+                                      categoryEntity: newCategory));
+                                },
+                              );
+                            });
                       },
                     );
                   default:

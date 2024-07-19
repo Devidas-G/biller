@@ -73,6 +73,7 @@ class CategoryBloc extends Bloc<InventoryEvent, CategoryBlocState> {
             message: "${failure.message}")), (category) {
       selectedCategory = category;
     });
+    emit(state.copyWith(status: CategoryStatus.loading, categories: []));
     final result = await getCategories(NoParams());
     result.fold((failure) => emit(state.copyWith(status: CategoryStatus.error)),
         (categories) async {
@@ -101,6 +102,8 @@ class CategoryBloc extends Bloc<InventoryEvent, CategoryBlocState> {
         (category) => emit(state.copyWith(
             status: CategoryStatus.toast,
             message: "Category add succesfully")));
+
+    emit(state.copyWith(status: CategoryStatus.loading, categories: []));
     final result = await getCategories(NoParams());
     result.fold((failure) => emit(state.copyWith(status: CategoryStatus.error)),
         (categories) async {

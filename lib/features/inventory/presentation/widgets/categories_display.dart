@@ -15,16 +15,22 @@ class CategoriesDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: categories.length,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          CategoryEntity category = categories[index];
-          return CategoryTile(
-              onDelete: () => onDelete(category),
-              onEdit: () => onEdit(category),
-              title: category.name,
-              subtitle: '');
-        });
+    if (categories.isEmpty) {
+      return Center(
+        child: Text("Add categories to get started"),
+      );
+    } else {
+      return ListView.builder(
+          itemCount: categories.length,
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+            CategoryEntity category = categories[index];
+            return CategoryTile(
+                onDelete: () => onDelete(category),
+                onEdit: () => onEdit(category),
+                title: category.name,
+                subtitle: '');
+          });
+    }
   }
 }

@@ -6,3 +6,4 @@ export 'edit_item.dart';
 export 'item_card.dart';
 export 'item_tile.dart';
 export 'items_display.dart';
+export 'edit_category.dart';
