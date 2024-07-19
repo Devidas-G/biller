@@ -4,9 +4,13 @@ import 'widgets.dart';
 
 class CategoriesDisplay extends StatelessWidget {
   final List<CategoryEntity> categories;
+  final ValueChanged<CategoryEntity> onDelete;
+  final ValueChanged<CategoryEntity> onEdit;
   const CategoriesDisplay({
     super.key,
     required this.categories,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -17,8 +21,8 @@ class CategoriesDisplay extends StatelessWidget {
         itemBuilder: (context, index) {
           CategoryEntity category = categories[index];
           return CategoryTile(
-              onDelete: () {},
-              onEdit: () {},
+              onDelete: () => onDelete(category),
+              onEdit: () => onEdit(category),
               title: category.name,
               subtitle: '');
         });

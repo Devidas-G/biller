@@ -1,11 +1,10 @@
+import 'package:biller/features/inventory/domain/usecases/usecases.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/entity/category.dart';
-import '../../domain/usecases/category/add_category.dart';
-import '../../domain/usecases/category/get_categories.dart';
 import 'category_state.dart';
 import 'inventory_events.dart';
 
@@ -20,11 +19,21 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 class CategoryBloc extends Bloc<InventoryEvent, CategoryBlocState> {
   final GetCategories getCategories;
   final AddCategory addCategory;
-  CategoryBloc({required this.getCategories, required this.addCategory})
+  final DeleteCategory deleteCategory;
+  final EditCategory editCategory;
+  CategoryBloc(
+      {required this.getCategories,
+      required this.addCategory,
+      required this.deleteCategory,
+      required this.editCategory})
       : super(const CategoryBlocState()) {
     on<GetCategoriesEvent>(_mapGetCategoriesToState,
         transformer: throttleDroppable(throttleDuration));
     on<AddCategoryEvent>(_mapAddCategoryToState,
+        transformer: throttleDroppable(throttleDuration));
+    on<DeleteCategoryEvent>(_mapDeleteCategoryToState,
+        transformer: throttleDroppable(throttleDuration));
+    on<EditCategoryEvent>(_mapEditCategoryToState,
         transformer: throttleDroppable(throttleDuration));
   }
   Future<void> _mapGetCategoriesToState(
@@ -71,7 +80,63 @@ class CategoryBloc extends Bloc<InventoryEvent, CategoryBlocState> {
         emit(state.copyWith(status: CategoryStatus.loaded));
       } else {
         emit(state.copyWith(
-          status: CategoryStatus.loading,
+          status: CategoryStatus.loaded,
+          categories: categories,
+        ));
+      }
+    });
+  }
+
+  Future<void> _mapDeleteCategoryToState(
+      DeleteCategoryEvent event, Emitter<CategoryBlocState> emit) async {
+    emit(state.copyWith(
+      status: CategoryStatus.initial,
+    ));
+    //Add Category to database
+    final resultCategory = await deleteCategory(
+        DeleteCategoryParams(category: event.categoryEntity));
+    resultCategory.fold(
+        (failure) => emit(state.copyWith(
+            status: CategoryStatus.toast, message: "${failure.message}")),
+        (category) => emit(state.copyWith(
+            status: CategoryStatus.toast,
+            message: "Category add succesfully")));
+    final result = await getCategories(NoParams());
+    result.fold((failure) => emit(state.copyWith(status: CategoryStatus.error)),
+        (categories) async {
+      if (categories.isEmpty) {
+        emit(state.copyWith(status: CategoryStatus.loaded));
+      } else {
+        emit(state.copyWith(
+          status: CategoryStatus.loaded,
+          categories: categories,
+        ));
+      }
+    });
+  }
+
+  Future<void> _mapEditCategoryToState(
+      EditCategoryEvent event, Emitter<CategoryBlocState> emit) async {
+    emit(state.copyWith(
+      status: CategoryStatus.initial,
+    ));
+    //Add Category to database
+    final resultCategory =
+        await editCategory(EditCategoryParams(category: event.categoryEntity));
+    resultCategory.fold(
+        (failure) => emit(state.copyWith(
+            status: CategoryStatus.toast, message: "${failure.message}")),
+        (category) => emit(state.copyWith(
+            status: CategoryStatus.toast,
+            message: "Category edited succesfully")));
+    final result = await getCategories(NoParams());
+    result.fold((failure) => emit(state.copyWith(status: CategoryStatus.error)),
+        (categories) async {
+      if (categories.isEmpty) {
+        emit(state.copyWith(status: CategoryStatus.loaded));
+      } else {
+        emit(state.copyWith(
+          status: CategoryStatus.loaded,
           categories: categories,
         ));
       }

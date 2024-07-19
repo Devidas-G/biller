@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../../inventory/presentation/view/items.dart';
 import '../../domain/entity/item.dart';
 
 class ItemGrid extends StatelessWidget {
@@ -19,21 +20,38 @@ class ItemGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: GridView.builder(
-          itemCount: items.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // Number of columns in the grid
-            crossAxisSpacing: 10.0, // Spacing between columns
-            mainAxisSpacing: 10.0, // Spacing between rows
-            childAspectRatio: 3,
-          ),
-          itemBuilder: (context, index) {
-            ItemEntity item = items[index];
-            return ElevatedButton(
-              onPressed: () => onPressed(item),
-              child: Text(item.name),
-            );
-          }),
+      child: (() {
+        if (items.isEmpty) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Add Items To Inventory"),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ItemsManagement()));
+                  },
+                  child: Text("Add Items")),
+            ],
+          );
+        } else {
+          return GridView.builder(
+              itemCount: items.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, // Number of columns in the grid
+                crossAxisSpacing: 10.0, // Spacing between columns
+                mainAxisSpacing: 10.0, // Spacing between rows
+                childAspectRatio: 3,
+              ),
+              itemBuilder: (context, index) {
+                ItemEntity item = items[index];
+                return ElevatedButton(
+                  onPressed: () => onPressed(item),
+                  child: Text(item.name),
+                );
+              });
+        }
+      }()),
     );
   }
 }

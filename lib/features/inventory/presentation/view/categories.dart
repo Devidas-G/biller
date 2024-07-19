@@ -22,7 +22,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
   void addCategory() {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController nameController = TextEditingController();
-    final TextEditingController idController = TextEditingController();
 
     showDialog(
       context: context,
@@ -46,22 +45,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     return null;
                   },
                 ),
-                TextFormField(
-                  controller: idController,
-                  decoration: const InputDecoration(
-                    labelText: 'Category ID',
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a category ID';
-                    }
-                    if (int.tryParse(value) == null) {
-                      return 'Please enter a valid number';
-                    }
-                    return null;
-                  },
-                ),
               ],
             ),
           ),
@@ -78,11 +61,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 if (_formKey.currentState?.validate() ?? false) {
                   // Use the input from the text fields
                   final String name = nameController.text;
-                  final int id = int.parse(idController.text);
-
                   // Add the new category or handle the input as needed
                   categoryBloc.add(AddCategoryEvent(
-                      categoryEntity: CategoryEntity(name: name, id: id)));
+                      categoryEntity: CategoryEntity(name: name)));
 
                   // Close the dialog
                   Navigator.of(context).pop();
@@ -142,7 +123,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       message: state.message,
                     );
                   case CategoryStatus.loaded || CategoryStatus.toast:
-                    return CategoriesDisplay(categories: state.categories);
+                    return CategoriesDisplay(
+                      categories: state.categories,
+                      onDelete: (CategoryEntity category) {
+                        categoryBloc
+                            .add(DeleteCategoryEvent(categoryEntity: category));
+                      },
+                      onEdit: (CategoryEntity category) {
+                        categoryBloc
+                            .add(EditCategoryEvent(categoryEntity: category));
+                      },
+                    );
                   default:
                     return const MessageDisplay(
                       message: 'Something went wrong',

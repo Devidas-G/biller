@@ -12,14 +12,14 @@ import '../widgets/widgets.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
-class Inventory extends StatefulWidget {
-  const Inventory({super.key});
+class ItemsManagement extends StatefulWidget {
+  const ItemsManagement({super.key});
 
   @override
-  State<Inventory> createState() => _InventoryState();
+  State<ItemsManagement> createState() => _ItemsManagementState();
 }
 
-class _InventoryState extends State<Inventory> {
+class _ItemsManagementState extends State<ItemsManagement> {
   ItemBloc itemBloc = sl<ItemBloc>();
 
   void fetchItems(List<CategoryEntity> categories) {
@@ -40,7 +40,7 @@ class _InventoryState extends State<Inventory> {
             icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text("Inventory"),
+          title: const Text("ITEMS"),
           actions: [
             ElevatedButton(
                 onPressed: () {

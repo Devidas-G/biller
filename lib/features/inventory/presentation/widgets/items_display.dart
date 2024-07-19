@@ -121,35 +121,42 @@ class _ItemsDisplayState extends State<ItemsDisplay> {
         ),
         Expanded(
           child: (() {
-            if (_isGrid) {
-              return GridView.builder(
-                  itemCount: widget.items.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Number of columns in the grid
-                    crossAxisSpacing: 10.0, // Spacing between columns
-                    mainAxisSpacing: 10.0, // Spacing between rows
-                    childAspectRatio: 1, // Aspect ratio for each card
-                  ),
-                  itemBuilder: (context, index) {
-                    ItemEntity item = widget.items[index];
-                    return ItemCard(
-                        onClick: () {},
-                        title: item.name,
-                        price: item.price.toString());
-                  });
+            if (widget.items.isEmpty) {
+              return Center(
+                child: Text("Add Items to get Started"),
+              );
             } else {
-              return ListView.builder(
-                  itemCount: widget.items.length,
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    ItemEntity item = widget.items[index];
-                    return ItemTile(
-                      onDelete: () => widget.onDelete(item),
-                      title: item.name,
-                      subtitle: item.price.toString(),
-                      onEdit: () => widget.onEdit(item),
-                    );
-                  });
+              if (_isGrid) {
+                return GridView.builder(
+                    itemCount: widget.items.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // Number of columns in the grid
+                      crossAxisSpacing: 10.0, // Spacing between columns
+                      mainAxisSpacing: 10.0, // Spacing between rows
+                      childAspectRatio: 1, // Aspect ratio for each card
+                    ),
+                    itemBuilder: (context, index) {
+                      ItemEntity item = widget.items[index];
+                      return ItemCard(
+                          onClick: () {},
+                          title: item.name,
+                          price: item.price.toString());
+                    });
+              } else {
+                return ListView.builder(
+                    itemCount: widget.items.length,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      ItemEntity item = widget.items[index];
+                      return ItemTile(
+                        onDelete: () => widget.onDelete(item),
+                        title: item.name,
+                        subtitle: item.price.toString(),
+                        onEdit: () => widget.onEdit(item),
+                      );
+                    });
+              }
             }
           }()),
         ),

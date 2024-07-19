@@ -11,6 +11,8 @@ abstract class InventoryLocalDatasource {
   ///Fetch all categories from the database
   Future<List<CategoryEntity>> getCategories();
   Future<CategoryEntity> addCategory(CategoryEntity category);
+  Future<CategoryEntity> deleteCategory(CategoryEntity category);
+  Future<CategoryEntity> editCategory(CategoryEntity category);
 
   ///Fetch Items from a specific category
   Future<List<ItemEntity>> getItems(List<CategoryEntity> categories);
@@ -185,6 +187,52 @@ class InventoryLocalDatasourceImpl implements InventoryLocalDatasource {
         }
       }
       return item;
+    } on DatabaseException catch (e) {
+      throw CacheException(e.toString());
+    } catch (e) {
+      throw UnknownException(e.toString());
+    }
+  }
+
+  @override
+  Future<CategoryEntity> deleteCategory(CategoryEntity category) async {
+    final db = await dbHelper.database;
+    try {
+      // Start a transaction to ensure atomicity
+      await db.transaction((txn) async {
+        // Delete from item_categories first to remove dependencies
+        await txn.delete(
+          'item_categories',
+          where: '${DBHelper.columnCategoryId} = ?',
+          whereArgs: [category.id],
+        );
+
+        // Then delete from categories
+        await txn.delete(
+          'categories',
+          where: '${DBHelper.columnId} = ?',
+          whereArgs: [category.id],
+        );
+      });
+      return category;
+    } on DatabaseException catch (e) {
+      throw CacheException(e.toString());
+    } catch (e) {
+      throw UnknownException(e.toString());
+    }
+  }
+
+  @override
+  Future<CategoryEntity> editCategory(CategoryEntity category) async {
+    final db = await dbHelper.database;
+    try {
+      await db.update(
+        'categories',
+        {DBHelper.columnName: category.name},
+        where: '${DBHelper.columnId} = ?',
+        whereArgs: [category.id],
+      );
+      return category;
     } on DatabaseException catch (e) {
       throw CacheException(e.toString());
     } catch (e) {

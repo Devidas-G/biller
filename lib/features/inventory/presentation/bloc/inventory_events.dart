@@ -73,6 +73,22 @@ class AddCategoryEvent extends InventoryEvent {
   List<Object> get props => [categoryEntity];
 }
 
+//! Delete Category
+class DeleteCategoryEvent extends InventoryEvent {
+  final CategoryEntity categoryEntity;
+  const DeleteCategoryEvent({required this.categoryEntity});
+  @override
+  List<Object> get props => [categoryEntity];
+}
+
+//! Edit Category
+class EditCategoryEvent extends InventoryEvent {
+  final CategoryEntity categoryEntity;
+  const EditCategoryEvent({required this.categoryEntity});
+  @override
+  List<Object> get props => [categoryEntity];
+}
+
 //!Params
 
 class GetInventoryItemsParams {

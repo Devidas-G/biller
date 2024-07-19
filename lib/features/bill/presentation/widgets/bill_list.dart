@@ -12,16 +12,22 @@ class BillList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ListView.builder(
-          itemCount: items.length,
-          physics: const BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            ItemEntity item = items[index];
-            return BillTile(
-                title: item.name,
-                price: item.price.toString(),
-                onCancel: () => onPressed(item));
-          }),
+      child: (() {
+        if (items.isEmpty) {
+          return const Center(child: Text("Select Items to get Started"));
+        } else {
+          return ListView.builder(
+              itemCount: items.length,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                ItemEntity item = items[index];
+                return BillTile(
+                    title: item.name,
+                    price: item.price.toString(),
+                    onCancel: () => onPressed(item));
+              });
+        }
+      }()),
     );
   }
 }

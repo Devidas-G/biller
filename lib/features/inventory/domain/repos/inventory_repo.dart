@@ -8,6 +8,9 @@ import '../entity/item.dart';
 abstract class InventoryRepo {
   Future<Either<Failure, List<CategoryEntity>>> getCategories();
   Future<Either<Failure, CategoryEntity>> addCategory(CategoryEntity category);
+  Future<Either<Failure, CategoryEntity>> deleteCategory(
+      CategoryEntity category);
+  Future<Either<Failure, CategoryEntity>> editCategory(CategoryEntity category);
   Future<Either<Failure, List<ItemEntity>>> getItems(
       List<CategoryEntity> categories);
   Future<Either<Failure, List<ItemEntity>>> getAllItems();

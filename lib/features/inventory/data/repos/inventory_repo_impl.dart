@@ -92,4 +92,28 @@ class InventoryRepoImpl extends InventoryRepo {
       return const Left(CacheFailure('failed to update Item'));
     }
   }
+
+  @override
+  Future<Either<Failure, CategoryEntity>> deleteCategory(
+      CategoryEntity category) async {
+    try {
+      final CategoryEntity resultcategory =
+          await inventoryLocalDatasource.deleteCategory(category);
+      return Right(resultcategory);
+    } on CacheException {
+      return const Left(CacheFailure('failed to delete category'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CategoryEntity>> editCategory(
+      CategoryEntity category) async {
+    try {
+      final CategoryEntity resultcategory =
+          await inventoryLocalDatasource.editCategory(category);
+      return Right(resultcategory);
+    } on CacheException {
+      return const Left(CacheFailure('failed to edit category'));
+    }
+  }
 }

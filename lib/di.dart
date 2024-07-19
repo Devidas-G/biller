@@ -32,8 +32,11 @@ Future<void> init() async {
       getAllItems: sl(),
       deleteItem: sl(),
       updateItem: sl()));
-  sl.registerFactory(
-      () => CategoryBloc(getCategories: sl(), addCategory: sl()));
+  sl.registerFactory(() => CategoryBloc(
+      getCategories: sl(),
+      addCategory: sl(),
+      deleteCategory: sl(),
+      editCategory: sl()));
 // Use cases
   sl.registerLazySingleton(() => GetItems(sl()));
   sl.registerLazySingleton(() => GetAllItems(sl()));
@@ -42,6 +45,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DeleteItem(sl()));
   sl.registerLazySingleton(() => GetCategories(sl()));
   sl.registerLazySingleton(() => AddCategory(sl()));
+  sl.registerLazySingleton(() => DeleteCategory(sl()));
+  sl.registerLazySingleton(() => EditCategory(sl()));
 // Repository
   sl.registerLazySingleton<InventoryRepo>(
     () => InventoryRepoImpl(inventoryLocalDatasource: sl()),

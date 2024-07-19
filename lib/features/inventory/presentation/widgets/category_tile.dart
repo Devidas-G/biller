@@ -21,7 +21,7 @@ class CategoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(title),
-      subtitle: Text(subtitle),
+      // subtitle: Text(subtitle),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

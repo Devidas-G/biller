@@ -17,7 +17,7 @@ class _ManageState extends State<Manage> {
       'Items': () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const Inventory(),
+            builder: (context) => const ItemsManagement(),
           ),
         );
       },
