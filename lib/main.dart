@@ -28,11 +28,32 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          brightness: Brightness.light,
           scaffoldBackgroundColor: Colors.grey.shade300,
           primaryColor: Colors.deepPurpleAccent.shade700,
           listTileTheme: ListTileThemeData(
             contentPadding: const EdgeInsets.only(left: 5, right: 5),
             tileColor: Colors.white, // Set your desired background color here
+            selectedTileColor:
+                Colors.blue[100], // Optional: color when the tile is selected
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 5),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  backgroundColor: Colors.deepPurpleAccent.shade700,
+                  foregroundColor: Colors.white)),
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.grey.shade800,
+          primaryColor: Colors.deepPurpleAccent.shade700,
+          listTileTheme: ListTileThemeData(
+            contentPadding: const EdgeInsets.only(left: 5, right: 5),
+            tileColor:
+                Colors.grey.shade900, // Set your desired background color here
             selectedTileColor:
                 Colors.blue[100], // Optional: color when the tile is selected
           ),
